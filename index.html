@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VETeran</title>
+  <meta name="description" content="VETeran: clinical-grade veterinary decision support with photo and symptom triage grounded in trusted veterinary literature. Bilkent University CS 491/492 senior project.">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bubbles" aria-hidden="true"></div>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/shield.png" alt=""><span><span class="vet">VET</span><span class="eran">eran</span></span></a>
+    <ul class="tabs">
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="documents.html">CS491/2 Documents</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <!-- Welcome -->
+  <section class="hero">
+    <div class="wrap">
+      <h1>Welcome to <span class="vet">VET</span><span class="eran">eran</span>!</h1>
+      <p class="sub">Stay updated with the latest information about our project, our team and our progress.</p>
+      <p class="intro">We are senior Computer Science students at Bilkent University, Türkiye, developing our senior project <strong>VETeran</strong>: clinical-grade veterinary decision support, with photo and symptom triage grounded in trusted veterinary literature and every verdict traceable to its source.</p>
+      <a class="scroll-link" href="#about">Learn more <span>↓</span></a>
+    </div>
+  </section>
+
+  <!-- About our solution -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <h2 class="section-title">About Our Solution</h2>
+
+      <div class="panel">
+        <h3>The problem</h3>
+        <div class="grid grid-3">
+          <div class="mini">
+            <h4>Costly or uncertain visits</h4>
+            <p>A worrying symptom usually means an expensive clinic trip or a confusing search, with no way to tell which one the moment actually calls for.</p>
+          </div>
+          <div class="mini">
+            <h4>Contradictory advice</h4>
+            <p>Forums and generic chatbots give confident answers with no way for an owner to check where they came from.</p>
+          </div>
+          <div class="mini">
+            <h4>Unverified professionals</h4>
+            <p>Anyone can claim to be a vet online, and owners have no reliable way to tell who actually is one.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>How VETeran works</h3>
+        <p>Two retrieval pipelines feed a single safety gate: cited rules set the minimum urgency, and retrieved evidence explains it.</p>
+        <div class="grid grid-2" style="margin-top:16px">
+          <div class="mini">
+            <span class="k">Hybrid RAG · Clinical triage</span>
+            <h4>Strict rules, searchable evidence</h4>
+            <p>Species-aware symptom answers go through a strict rule lane that catches red flags and a search lane that pulls and reranks matching literature passages. Every verdict links the exact passages behind it, and no red flag is ever downgraded.</p>
+          </div>
+          <div class="mini">
+            <span class="k blue">Multimodal RAG · Visual triage</span>
+            <h4>Photos checked against real cases</h4>
+            <p>A vision model embeds the owner's photo and finds the closest cases in trusted veterinary literature. Low-similarity matches are flagged, never guessed, and a photo can only raise concern, never lower an urgency level.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Roadmap</h3>
+        <div class="grid grid-4">
+          <div class="mini"><div class="phase-n">1</div><h4>Knowledge base</h4><p>Source and license veterinary literature; passage-level index with vector search.</p><div class="milestone">Milestone: searchable, cited corpus</div></div>
+          <div class="mini"><div class="phase-n">2</div><h4>Hybrid clinical triage</h4><p>Rule lane, search lane and safety gate, with citations in every verdict.</p><div class="milestone">Milestone: passes the under-triage suite</div></div>
+          <div class="mini"><div class="phase-n">3</div><h4>Visual symptom triage</h4><p>Image embeddings, similar-case search, confidence thresholds and fallback.</p><div class="milestone">Milestone: photo signal live in verdicts</div></div>
+          <div class="mini"><div class="phase-n">4</div><h4>Clinical validation</h4><p>Veterinarian review of verdicts and a pilot with partner clinics.</p><div class="milestone">Milestone: clinical-grade release</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team (filled from content.js) -->
+  <section class="section" id="team">
+    <div class="wrap">
+      <h2 class="section-title">Who Are We?</h2>
+      <div class="team" id="team-grid"></div>
+    </div>
+  </section>
+
+  <!-- Gallery (filled from content.js) -->
+  <section class="section" id="gallery-section">
+    <div class="wrap">
+      <h2 class="section-title">Gallery</h2>
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <!-- Contact (filled from content.js) -->
+  <section class="section" id="contact">
+    <div class="wrap">
+      <h2 class="section-title">Contact Us</h2>
+      <div class="panel contact" id="contact-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 VETeran. All rights reserved.</span>
+    <a href="https://github.com/VETeran2027" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>Follow us on GitHub</a>
+  </div>
+</footer>
+
+<script>
+  /* Load the latest content.js (bypassing stale browser caches), then the site script. */
+  (function () {
+    var s = document.createElement("script");
+    s.src = "content.js?v=" + Math.floor(Date.now() / 60000);
+    s.onload = s.onerror = function () {
+      var t = document.createElement("script"); t.src = "site.js"; document.body.appendChild(t);
+    };
+    document.body.appendChild(s);
+  })();
+</script>
+</body>
+</html>

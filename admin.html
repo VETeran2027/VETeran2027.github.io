@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Edit site · VETeran</title>
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #f6f8f7; }
+    .admin-wrap { max-width: 980px; }
+    .admin-title { text-align: left; font-size: clamp(30px, 4vw, 40px); padding: 48px 0 6px; }
+    .admin-sub { color: var(--muted); margin: 0 0 24px; }
+    .panel h3 { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .panel .note { color: var(--muted); font-size: 14px; margin: -6px 0 16px; }
+
+    label.f { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    input[type=text], input[type=url], input[type=email], input[type=password] {
+      width: 100%; font: 15px var(--font); color: var(--ink);
+      padding: 9px 12px; border: 1px solid #d5dad8; border-radius: 6px; background: #fff;
+    }
+    input:focus { outline: 2px solid rgba(63, 159, 69, .35); border-color: var(--green); }
+    .fields { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+    .fields .full { grid-column: 1 / -1; }
+
+    .sbtn {
+      border: 1px solid #d5dad8; background: #fff; color: var(--ink); cursor: pointer;
+      font: 600 13px var(--font); padding: 6px 11px; border-radius: 6px; white-space: nowrap;
+    }
+    .sbtn:hover { border-color: var(--green); color: var(--green-dark); }
+    .sbtn.danger:hover { border-color: #c0392b; color: #c0392b; }
+    .sbtn:disabled { opacity: .45; cursor: default; }
+    .file-btn { position: relative; overflow: hidden; display: inline-block; }
+    .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: default; }
+
+    .row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-top: 1px solid var(--line); }
+    .row:first-of-type { border-top: 0; }
+    .row .grow { flex: 1; min-width: 0; }
+    .row .tools { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .av { width: 76px; height: 76px; flex: none; border-radius: 50%; overflow: hidden; position: relative;
+          background: linear-gradient(135deg, var(--green), var(--blue)); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 22px; }
+    .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .thumb { background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .thumb .img { aspect-ratio: 4 / 3; background: #eef1f0; display: grid; place-items: center; }
+    .thumb .img img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb .body { padding: 10px; }
+    .thumb .tools { display: flex; gap: 6px; margin-top: 8px; }
+
+    .course-box { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-top: 14px; background: #fcfdfc; }
+    .course-box .head { display: flex; gap: 10px; align-items: flex-end; }
+    .doc-row { display: grid; grid-template-columns: 1fr 1.3fr auto; gap: 10px; align-items: end; padding: 12px 0; border-top: 1px dashed var(--line); }
+    .doc-row:first-of-type { border-top: 0; }
+    .doc-row .tools { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag-pending { display: inline-block; font-size: 12px; font-weight: 600; color: #8a5a00; background: #fff4d6; padding: 1px 8px; border-radius: 999px; margin-top: 4px; }
+
+    .signin { max-width: 560px; }
+    .signin ol { padding-left: 20px; margin: 8px 0 0; font-size: 14px; color: #333; }
+    .signin ol li { margin-bottom: 6px; }
+    .signin details { margin-top: 18px; font-size: 14px; }
+    .signin summary { cursor: pointer; font-weight: 600; color: var(--blue-dark); }
+    .check { display: flex; gap: 8px; align-items: center; font-size: 14px; margin: 12px 0 16px; }
+    .msg { margin-top: 12px; font-size: 14px; padding: 10px 12px; border-radius: 6px; }
+    .msg.err { background: #fdecea; color: #a12a1f; }
+    .msg.ok { background: #e8f5e7; color: var(--green-dark); }
+    .msg.info { background: #e3f1f8; color: var(--blue-dark); }
+
+    .whoami { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+              background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 14px; margin-bottom: 20px; }
+    .savebar { position: sticky; bottom: 0; z-index: 20; background: #fff; border-top: 1px solid var(--line);
+               box-shadow: 0 -4px 16px rgba(0,0,0,.06); margin-top: 32px; }
+    .savebar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+    .savebar .status { font-size: 14px; color: var(--muted); }
+    .savebar .status.dirty { color: #8a5a00; font-weight: 600; }
+
+    @media (max-width: 760px) {
+      .fields { grid-template-columns: 1fr; }
+      .doc-row { grid-template-columns: 1fr; }
+      .row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body class="is-editor">
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/shield.png" alt=""><span><span class="vet">VET</span><span class="eran">eran</span></span></a>
+    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="documents.html">CS491/2 Documents</a></li>
+      <li><a href="admin.html" aria-current="page">Edit site</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap admin-wrap">
+    <h1 class="page-title admin-title">Edit site</h1>
+    <p class="admin-sub">For VETeran team members only. Changes are saved straight to the website's GitHub repository.</p>
+    <div id="app"><p class="admin-sub">Loading…</p></div>
+  </div>
+</main>
+
+<div class="savebar" id="savebar" hidden>
+  <div class="wrap admin-wrap">
+    <span class="status" id="status">No unsaved changes</span>
+    <span>
+      <button class="sbtn" type="button" id="discard">Discard changes</button>
+      <button class="btn" type="button" id="save">Save &amp; publish</button>
+    </span>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ================= Config ================= */
+  var DEFAULT_REPO = { owner: "VETeran2027", repo: "VETeran2027.github.io", branch: "main" };
+  var API = "https://api.github.com";
+  var CONTENT_PATH = "content.js";
+  var MAX_PDF_MB = 25;
+  var HEADER = "/*\n  VETeran website content.\n  The easiest way to change this is the Edit page (admin.html on the website).\n  If you edit by hand, keep it valid JSON: double quotes, and no comma after the last item in a list.\n*/\n";
+
+  function store(kind) { try { var s = window[kind]; s.setItem("__t", "1"); s.removeItem("__t"); return s; } catch (e) { return null; } }
+  var LS = store("localStorage"), SS = store("sessionStorage");
+  function getItem(k) { return (SS && SS.getItem(k)) || (LS && LS.getItem(k)) || ""; }
+  function clearItem(k) { try { SS && SS.removeItem(k); LS && LS.removeItem(k); } catch (e) {} }
+
+  function detectRepo() {
+    var saved = {};
+    try { saved = JSON.parse(getItem("veteran-admin-repo") || "{}"); } catch (e) {}
+    if (saved.owner && saved.repo) return { owner: saved.owner, repo: saved.repo, branch: saved.branch || "main" };
+    var h = location.hostname;
+    if (/\.github\.io$/i.test(h)) {
+      var owner = h.split(".")[0];
+      var seg = location.pathname.split("/").filter(Boolean)[0];
+      if (seg && !/\.html?$/i.test(seg)) return { owner: owner, repo: seg, branch: "main" };
+      return { owner: owner, repo: h, branch: "main" };
+    }
+    return DEFAULT_REPO;
+  }
+  var CFG = detectRepo();
+  function R(path) { return "/repos/" + encodeURIComponent(CFG.owner) + "/" + encodeURIComponent(CFG.repo) + path; }
+
+  /* ================= State ================= */
+  var token = "", me = null;
+  var data = null, contentSha = "", originalText = "";
+  var uploads = {};    // path -> { b64 }
+  var previews = {};   // path -> object URL (kept after save so new images still show)
+  var deletes = {};    // path -> true
+  var dirty = false, busy = false;
+  var stamp = Date.now();
+
+  /* ================= Helpers ================= */
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function slug(s) {
+    return String(s || "file").replace(/ı/g, "i").replace(/İ/g, "I").normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "file";
+  }
+  function initials(name) {
+    var p = String(name || "").trim().split(/\s+/);
+    return ((p[0] || "")[0] || "") + (p.length > 1 ? p[p.length - 1][0] : "");
+  }
+  function b64ToUtf8(b64) {
+    var bin = atob(b64.replace(/\s/g, "")), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder("utf-8").decode(bytes);
+  }
+  function blobToB64(blob) {
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onload = function () { res(String(fr.result).split(",")[1]); };
+      fr.onerror = function () { rej(new Error("Could not read the file.")); };
+      fr.readAsDataURL(blob);
+    });
+  }
+  function parseContent(text) {
+    var a = text.indexOf("{"), b = text.lastIndexOf("}");
+    if (a < 0 || b < a) throw new Error("content.js doesn't contain the expected data.");
+    var d = JSON.parse(text.slice(a, b + 1));
+    d.team = d.team || []; d.gallery = d.gallery || []; d.documents = d.documents || []; d.contact = d.contact || {};
+    if (d.teamRole == null) d.teamRole = "";
+    d.documents.forEach(function (c) { c.items = c.items || []; });
+    return d;
+  }
+  function serialize() { return HEADER + "window.SITE = " + JSON.stringify(data, null, 2) + ";\n"; }
+  function isLocal(p) { return p && !/^[a-z]+:/i.test(p) && !/^\/\//.test(p); }
+  function managed(p) { return isLocal(p) && /^(assets\/team\/|assets\/gallery\/|docs\/)/.test(p); }
+  function imgSrc(p) {
+    if (!p) return "";
+    if (previews[p]) return previews[p];
+    return isLocal(p) ? p + "?v=" + stamp : p;
+  }
+  function referenced(p) {
+    var hit = false;
+    data.team.forEach(function (m) { if (m.photo === p) hit = true; });
+    data.gallery.forEach(function (g) { if (g.src === p) hit = true; });
+    data.documents.forEach(function (c) { c.items.forEach(function (d) { if (d.link === p) hit = true; }); });
+    return hit;
+  }
+  function dropFile(p) {
+    if (!managed(p) || referenced(p)) return;
+    delete uploads[p];
+    deletes[p] = true;
+  }
+  function addUpload(path, b64, blob) {
+    uploads[path] = { b64: b64 };
+    if (previews[path]) URL.revokeObjectURL(previews[path]);
+    previews[path] = URL.createObjectURL(blob);
+    delete deletes[path];
+  }
+  function uniquePath(base, ext) {
+    var p = base + ext, n = 2;
+    while (referenced(p) || uploads[p]) { p = base + "-" + n + ext; n++; }
+    return p;
+  }
+  function getPath(obj, path) { return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj); }
+  function setPath(obj, path, val) {
+    var ks = path.split("."), last = ks.pop();
+    getPath(obj, ks.join("."))[last] = val;
+  }
+  function move(arr, i, d) {
+    var j = i + d; if (j < 0 || j >= arr.length) return;
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+
+  function processImage(file, mode) {
+    return new Promise(function (res, rej) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var w = img.naturalWidth, h = img.naturalHeight, c = document.createElement("canvas"), ctx = c.getContext("2d");
+        if (mode === "avatar") {
+          var s = Math.min(w, h), S = Math.min(480, s);
+          c.width = c.height = S;
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, S, S);
+          ctx.drawImage(img, (w - s) / 2, (h - s) / 2, s, s, 0, 0, S, S);
+        } else {
+          var k = Math.min(1, 1600 / Math.max(w, h));
+          c.width = Math.round(w * k); c.height = Math.round(h * k);
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.height);
+        }
+        URL.revokeObjectURL(url);
+        c.toBlob(function (b) { b ? res(b) : rej(new Error("Could not process the image.")); }, "image/jpeg", 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); rej(new Error("\"" + file.name + "\" couldn't be read as an image. Use a JPG or PNG.")); };
+      img.src = url;
+    });
+  }
+
+  /* ================= GitHub API ================= */
+  function gh(path, opts) {
+    opts = opts || {};
+    var headers = { "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Authorization": "Bearer " + token };
+    if (opts.body) headers["Content-Type"] = "application/json";
+    return fetch(API + path, { method: opts.method || "GET", headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined, cache: "no-store" })
+      .then(function (r) {
+        if (r.ok) return r.status === 204 ? null : r.json();
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          var e = new Error(j.message || ("HTTP " + r.status)); e.status = r.status; throw e;
+        });
+      });
+  }
+  function friendly(e, phase) {
+    if (e.code === "conflict") return e.message;
+    if (e.status === 401) return "GitHub rejected the token. It may be mistyped, revoked or expired. Create a new one and sign in again.";
+    if (e.status === 404) return "This token can't see the repository " + CFG.owner + "/" + CFG.repo + ". When creating the token, choose the VETeran2027 organization as the resource owner and give it access to this repository.";
+    if (e.status === 403) return phase === "save"
+      ? "GitHub refused the save. The token needs the \"Contents: Read and write\" permission on this repository, and your account needs write access to it. (" + e.message + ")"
+      : "GitHub refused the request: " + e.message;
+    if (e.status === 409 || e.status === 422) return "Someone else saved changes at the same moment. Reload the page and redo your edit.";
+    if (e instanceof TypeError) return "Couldn't reach GitHub. Check your internet connection.";
+    return e.message || String(e);
+  }
+
+  function signIn(tok, remember) {
+    token = tok.trim();
+    return gh("/user").then(function (u) {
+      me = u;
+      return gh(R(""));
+    }).then(function (repo) {
+      if (!repo.permissions || !repo.permissions.push) {
+        var e = new Error("Your GitHub account (@" + me.login + ") doesn't have write access to " + CFG.owner + "/" + CFG.repo + ". Only team members with write access can edit the site.");
+        e.code = "conflict"; throw e;
+      }
+      CFG.branch = CFG.branch || repo.default_branch || "main";
+      try {
+        clearItem("veteran-admin-token");
+        (remember ? LS : SS) && (remember ? LS : SS).setItem("veteran-admin-token", token);
+      } catch (e) {}
+      return loadContent();
+    });
+  }
+  function loadContent() {
+    return gh(R("/contents/" + CONTENT_PATH + "?ref=" + encodeURIComponent(CFG.branch))).then(function (f) {
+      originalText = b64ToUtf8(f.content);
+      contentSha = f.sha;
+      data = parseContent(originalText);
+      uploads = {}; deletes = {}; dirty = false; stamp = Date.now();
+    });
+  }
+
+  function save() {
+    if (busy || !dirty) return;
+    busy = true; setStatus("Saving…", "");
+    var headSha, baseTree, existing = {}, entries = [], text = serialize();
+    return gh(R("/git/ref/heads/" + encodeURIComponent(CFG.branch))).then(function (ref) {
+      headSha = ref.object.sha;
+      return gh(R("/git/commits/" + headSha));
+    }).then(function (c) {
+      baseTree = c.tree.sha;
+      return gh(R("/git/trees/" + baseTree + "?recursive=1"));
+    }).then(function (t) {
+      t.tree.forEach(function (e) { existing[e.path] = e.sha; });
+      if (existing[CONTENT_PATH] && existing[CONTENT_PATH] !== contentSha) {
+        var e = new Error("The site content was changed by someone else since you opened this page. Copy anything you typed, reload the page, and redo your edit.");
+        e.code = "conflict"; throw e;
+      }
+      var paths = Object.keys(uploads), i = 0;
+      function next() {
+        if (i >= paths.length) return Promise.resolve();
+        var p = paths[i++];
+        setStatus("Uploading " + i + " of " + paths.length + "…", "");
+        return gh(R("/git/blobs"), { method: "POST", body: { content: uploads[p].b64, encoding: "base64" } }).then(function (b) {
+          entries.push({ path: p, mode: "100644", type: "blob", sha: b.sha });
+          return next();
+        });
+      }
+      return next();
+    }).then(function () {
+      return gh(R("/git/blobs"), { method: "POST", body: { content: text, encoding: "utf-8" } });
+    }).then(function (b) {
+      entries.push({ path: CONTENT_PATH, mode: "100644", type: "blob", sha: b.sha });
+      Object.keys(deletes).forEach(function (p) {
+        if (existing[p] && !uploads[p]) entries.push({ path: p, mode: "100644", type: "blob", sha: null });
+      });
+      return gh(R("/git/trees"), { method: "POST", body: { base_tree: baseTree, tree: entries } });
+    }).then(function (tree) {
+      return gh(R("/git/commits"), { method: "POST", body: { message: "Update site content from the Edit page", tree: tree.sha, parents: [headSha] } });
+    }).then(function (commit) {
+      return gh(R("/git/refs/heads/" + encodeURIComponent(CFG.branch)), { method: "PATCH", body: { sha: commit.sha } });
+    }).then(function () {
+      return gh(R("/contents/" + CONTENT_PATH + "?ref=" + encodeURIComponent(CFG.branch)));
+    }).then(function (f) {
+      contentSha = f.sha; originalText = b64ToUtf8(f.content);
+      uploads = {}; deletes = {}; dirty = false; busy = false;
+      setStatus("Saved ✓ The website updates in about a minute.", "ok");
+      render();
+    }).catch(function (e) {
+      busy = false;
+      setStatus(friendly(e, "save"), "err");
+      updateBar();
+    });
+  }
+
+  /* ================= Rendering ================= */
+  var app = document.getElementById("app");
+  var bar = document.getElementById("savebar"), statusEl = document.getElementById("status");
+  var lastMsg = null;
+
+  function setStatus(text, kind) {
+    lastMsg = { text: text, kind: kind };
+    statusEl.textContent = text;
+    statusEl.className = "status" + (kind === "dirty" ? " dirty" : "");
+    statusEl.style.color = kind === "err" ? "#a12a1f" : kind === "ok" ? "var(--green-dark)" : "";
+    updateBar();
+  }
+  function updateBar() {
+    document.getElementById("save").disabled = busy || !dirty;
+    document.getElementById("discard").disabled = busy || !dirty;
+  }
+  function markDirty() {
+    if (!dirty) { dirty = true; }
+    setStatus("You have unsaved changes", "dirty");
+  }
+
+  function renderSignIn(errMsg) {
+    bar.hidden = true;
+    app.innerHTML =
+      '<div class="panel signin">' +
+        '<h3>Sign in with GitHub</h3>' +
+        '<p class="note">Paste your GitHub access token. Only accounts with write access to <b>' + esc(CFG.owner + "/" + CFG.repo) + '</b> can edit.</p>' +
+        '<form id="signin-form">' +
+          '<label class="f" for="tok">Access token</label>' +
+          '<input type="password" id="tok" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required>' +
+          '<label class="check"><input type="checkbox" id="remember" checked> Keep me signed in on this device</label>' +
+          '<button class="btn" type="submit" id="signin-btn">Sign in</button>' +
+        '</form>' +
+        (errMsg ? '<div class="msg err">' + esc(errMsg) + '</div>' : '') +
+        '<details><summary>How do I get a token? (one-time, about 2 minutes)</summary><ol>' +
+          '<li>On GitHub, open <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens</b>, then <b>Generate new token</b>.</li>' +
+          '<li><b>Resource owner:</b> choose <b>' + esc(CFG.owner) + '</b> (the organization, not your own account).</li>' +
+          '<li><b>Expiration:</b> pick a custom date at the end of the project.</li>' +
+          '<li><b>Repository access:</b> Only select repositories → <b>' + esc(CFG.repo) + '</b>.</li>' +
+          '<li><b>Permissions → Repository permissions → Contents:</b> Read and write. Leave everything else as is.</li>' +
+          '<li>Generate, copy the token, and paste it above. Treat it like a password; never put it in the repository.</li>' +
+        '</ol></details>' +
+        '<details><summary>Repository settings</summary>' +
+          '<div class="fields" style="margin-top:10px">' +
+            '<div><label class="f">Owner</label><input type="text" id="cfg-owner" value="' + esc(CFG.owner) + '"></div>' +
+            '<div><label class="f">Repository</label><input type="text" id="cfg-repo" value="' + esc(CFG.repo) + '"></div>' +
+            '<div><label class="f">Branch</label><input type="text" id="cfg-branch" value="' + esc(CFG.branch) + '"></div>' +
+          '</div>' +
+        '</details>' +
+      '</div>';
+
+    document.getElementById("signin-form").onsubmit = function (ev) {
+      ev.preventDefault();
+      var o = document.getElementById("cfg-owner").value.trim(), r = document.getElementById("cfg-repo").value.trim(), b = document.getElementById("cfg-branch").value.trim() || "main";
+      if (o && r && (o !== CFG.owner || r !== CFG.repo || b !== CFG.branch)) {
+        CFG = { owner: o, repo: r, branch: b };
+        try { LS && LS.setItem("veteran-admin-repo", JSON.stringify(CFG)); } catch (e) {}
+      }
+      var btn = document.getElementById("signin-btn");
+      btn.disabled = true; btn.textContent = "Checking…";
+      signIn(document.getElementById("tok").value, document.getElementById("remember").checked)
+        .then(render)
+        .catch(function (e) { token = ""; renderSignIn(friendly(e, "signin")); });
+    };
+  }
+
+  function teamHtml() {
+    var rows = data.team.map(function (m, i) {
+      var src = imgSrc(m.photo);
+      return '<div class="row">' +
+        '<div class="av">' + esc(initials(m.name)) + (src ? '<img src="' + esc(src) + '" alt="" onerror="this.remove()">' : '') + '</div>' +
+        '<div class="grow">' +
+          '<div class="fields">' +
+            '<div><label class="f">Name</label><input type="text" data-bind="team.' + i + '.name" value="' + esc(m.name) + '"></div>' +
+            '<div><label class="f">Logbook link (Google Doc)</label><input type="url" data-bind="team.' + i + '.logbook" value="' + esc(m.logbook) + '" placeholder="https://docs.google.com/document/d/…"></div>' +
+          '</div>' +
+          (uploads[m.photo] ? '<span class="tag-pending">New photo, not saved yet</span>' : '') +
+          '<div class="tools">' +
+            '<span class="sbtn file-btn">' + (m.photo ? 'Change photo' : 'Add photo') + '<input type="file" accept="image/*" data-file="team-photo" data-i="' + i + '"></span>' +
+            (m.photo ? '<button class="sbtn" type="button" data-act="team-nophoto" data-i="' + i + '">Remove photo</button>' : '') +
+            '<button class="sbtn" type="button" data-act="team-up" data-i="' + i + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+            '<button class="sbtn" type="button" data-act="team-down" data-i="' + i + '"' + (i === data.team.length - 1 ? ' disabled' : '') + '>↓</button>' +
+            '<button class="sbtn danger" type="button" data-act="team-del" data-i="' + i + '">Remove member</button>' +
+          '</div>' +
+        '</div></div>';
+    }).join("");
+    return '<div class="panel"><h3>Team<button class="sbtn" type="button" data-act="team-add">+ Add member</button></h3>' +
+      '<p class="note">Photos are cropped to a square automatically. Set each logbook\'s sharing to "Anyone with the link can view".</p>' +
+      '<div style="max-width:520px;margin-bottom:8px"><label class="f">Role line under every name</label><input type="text" data-bind="teamRole" value="' + esc(data.teamRole) + '"></div>' +
+      rows + '</div>';
+  }
+
+  function galleryHtml() {
+    var items = data.gallery.map(function (g, i) {
+      return '<div class="thumb">' +
+        '<div class="img"><img src="' + esc(imgSrc(g.src)) + '" alt=""></div>' +
+        '<div class="body">' +
+          '<label class="f">Caption (optional)</label><input type="text" data-bind="gallery.' + i + '.caption" value="' + esc(g.caption) + '">' +
+          (uploads[g.src] ? '<span class="tag-pending">Not saved yet</span>' : '') +
+          '<div class="tools">' +
+            '<button class="sbtn" type="button" data-act="gal-up" data-i="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Move earlier">←</button>' +
+            '<button class="sbtn" type="button" data-act="gal-down" data-i="' + i + '"' + (i === data.gallery.length - 1 ? ' disabled' : '') + ' title="Move later">→</button>' +
+            '<button class="sbtn danger" type="button" data-act="gal-del" data-i="' + i + '">Remove</button>' +
+          '</div>' +
+        '</div></div>';
+    }).join("");
+    return '<div class="panel"><h3>Gallery<span class="sbtn file-btn">+ Add photos<input type="file" accept="image/*" multiple data-file="gallery-add"></span></h3>' +
+      '<p class="note">Photos are resized automatically, so phone pictures are fine. You can select several at once.</p>' +
+      (items ? '<div class="thumbs">' + items + '</div>' : '<p class="note">No photos yet.</p>') + '</div>';
+  }
+
+  function docsHtml() {
+    var courses = data.documents.map(function (c, ci) {
+      var rows = c.items.map(function (d, di) {
+        var base = "documents." + ci + ".items." + di;
+        return '<div class="doc-row">' +
+          '<div><label class="f">Title</label><input type="text" data-bind="' + base + '.title" value="' + esc(d.title) + '"></div>' +
+          '<div><label class="f">Link (upload a PDF, or paste a Drive/Canva link)</label><input type="text" data-bind="' + base + '.link" value="' + esc(d.link) + '" placeholder="Empty = shows as Coming soon">' +
+            (uploads[d.link] ? '<span class="tag-pending">PDF not saved yet</span>' : '') + '</div>' +
+          '<div class="tools">' +
+            '<span class="sbtn file-btn">Upload PDF<input type="file" accept="application/pdf,.pdf" data-file="doc-pdf" data-ci="' + ci + '" data-di="' + di + '"></span>' +
+            '<button class="sbtn" type="button" data-act="doc-up" data-ci="' + ci + '" data-di="' + di + '"' + (di === 0 ? ' disabled' : '') + '>↑</button>' +
+            '<button class="sbtn" type="button" data-act="doc-down" data-ci="' + ci + '" data-di="' + di + '"' + (di === c.items.length - 1 ? ' disabled' : '') + '>↓</button>' +
+            '<button class="sbtn danger" type="button" data-act="doc-del" data-ci="' + ci + '" data-di="' + di + '">Remove</button>' +
+          '</div></div>';
+      }).join("");
+      return '<div class="course-box">' +
+        '<div class="head"><div style="flex:1"><label class="f">Section heading</label><input type="text" data-bind="documents.' + ci + '.course" value="' + esc(c.course) + '"></div>' +
+        '<button class="sbtn danger" type="button" data-act="course-del" data-ci="' + ci + '">Remove section</button></div>' +
+        rows +
+        '<div style="margin-top:10px"><button class="sbtn" type="button" data-act="doc-add" data-ci="' + ci + '">+ Add document</button></div>' +
+      '</div>';
+    }).join("");
+    return '<div class="panel"><h3>CS491/2 Documents<button class="sbtn" type="button" data-act="course-add">+ Add section</button></h3>' +
+      '<p class="note">Uploaded PDFs open in the viewer on the Documents page. Other links open in a new tab.</p>' + courses + '</div>';
+  }
+
+  function contactHtml() {
+    var c = data.contact;
+    return '<div class="panel"><h3>Contact</h3><div class="fields">' +
+      '<div><label class="f">Email</label><input type="email" data-bind="contact.email" value="' + esc(c.email) + '"></div>' +
+      '<div><label class="f">GitHub</label><input type="url" data-bind="contact.github" value="' + esc(c.github) + '"></div>' +
+      '<div class="full"><label class="f">Address</label><input type="text" data-bind="contact.address" value="' + esc(c.address) + '"></div>' +
+      '<div><label class="f">Website</label><input type="url" data-bind="contact.website" value="' + esc(c.website) + '"></div>' +
+    '</div></div>';
+  }
+
+  function render() {
+    if (!token || !data) return renderSignIn();
+    var y = window.scrollY;
+    app.innerHTML =
+      '<div class="whoami"><span>Signed in as <b>@' + esc(me.login) + '</b> · editing <b>' + esc(CFG.owner + "/" + CFG.repo) + '</b></span>' +
+      '<span><a href="index.html" target="_blank">View site ↗</a> &nbsp; <button class="sbtn" type="button" data-act="signout">Sign out</button></span></div>' +
+      teamHtml() + galleryHtml() + docsHtml() + contactHtml();
+    bar.hidden = false;
+    if (lastMsg && (lastMsg.kind === "ok" || lastMsg.kind === "err")) setStatus(lastMsg.text, lastMsg.kind);
+    else if (dirty) setStatus("You have unsaved changes", "dirty");
+    else setStatus("No unsaved changes", "");
+    window.scrollTo(0, y);
+  }
+
+  /* ================= Events ================= */
+  app.addEventListener("input", function (e) {
+    var b = e.target.getAttribute("data-bind");
+    if (!b) return;
+    setPath(data, b, e.target.value);
+    lastMsg = null; markDirty();
+  });
+
+  app.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-act]");
+    if (!t || t.disabled) return;
+    var act = t.getAttribute("data-act"), i = +t.getAttribute("data-i"), ci = +t.getAttribute("data-ci"), di = +t.getAttribute("data-di");
+    var old;
+    switch (act) {
+      case "signout":
+        if (dirty && !window.confirm("You have unsaved changes. Sign out anyway?")) return;
+        clearItem("veteran-admin-token"); token = ""; me = null; data = null; dirty = false; lastMsg = null;
+        return renderSignIn();
+      case "team-add": data.team.push({ name: "New member", photo: "", logbook: "" }); break;
+      case "team-del":
+        if (!window.confirm("Remove " + (data.team[i].name || "this member") + " from the team?")) return;
+        old = data.team.splice(i, 1)[0].photo; dropFile(old); break;
+      case "team-up": move(data.team, i, -1); break;
+      case "team-down": move(data.team, i, 1); break;
+      case "team-nophoto": old = data.team[i].photo; data.team[i].photo = ""; dropFile(old); break;
+      case "gal-up": move(data.gallery, i, -1); break;
+      case "gal-down": move(data.gallery, i, 1); break;
+      case "gal-del": old = data.gallery.splice(i, 1)[0].src; dropFile(old); break;
+      case "doc-add": data.documents[ci].items.push({ title: "New document", link: "" }); break;
+      case "doc-up": move(data.documents[ci].items, di, -1); break;
+      case "doc-down": move(data.documents[ci].items, di, 1); break;
+      case "doc-del":
+        old = data.documents[ci].items.splice(di, 1)[0].link; dropFile(old); break;
+      case "course-add": data.documents.push({ course: "New section", items: [] }); break;
+      case "course-del":
+        if (!window.confirm("Remove the whole \"" + data.documents[ci].course + "\" section and its documents?")) return;
+        data.documents.splice(ci, 1)[0].items.forEach(function (d) { dropFile(d.link); }); break;
+      default: return;
+    }
+    lastMsg = null; markDirty(); render();
+  });
+
+  app.addEventListener("change", function (e) {
+    var kind = e.target.getAttribute("data-file");
+    if (!kind) return;
+    var files = Array.prototype.slice.call(e.target.files || []);
+    if (!files.length) return;
+    var i = +e.target.getAttribute("data-i"), ci = +e.target.getAttribute("data-ci"), di = +e.target.getAttribute("data-di");
+    setStatus("Preparing " + (files.length > 1 ? files.length + " files" : "file") + "…", "");
+    var job;
+
+    if (kind === "team-photo") {
+      var m = data.team[i];
+      job = processImage(files[0], "avatar").then(function (blob) {
+        return blobToB64(blob).then(function (b64) {
+          var path = "assets/team/" + slug(m.name) + ".jpg", old = m.photo;
+          m.photo = path;
+          if (old && old !== path) dropFile(old);
+          addUpload(path, b64, blob);
+        });
+      });
+    } else if (kind === "gallery-add") {
+      job = files.reduce(function (p, f) {
+        return p.then(function () {
+          return processImage(f, "photo").then(function (blob) {
+            return blobToB64(blob).then(function (b64) {
+              var path = uniquePath("assets/gallery/" + new Date().toISOString().slice(0, 10) + "-" + slug(f.name.replace(/\.[^.]+$/, "")), ".jpg");
+              data.gallery.push({ src: path, caption: "" });
+              addUpload(path, b64, blob);
+            });
+          });
+        });
+      }, Promise.resolve());
+    } else if (kind === "doc-pdf") {
+      var f = files[0], d = data.documents[ci].items[di];
+      if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") job = Promise.reject(new Error("Please choose a PDF file."));
+      else if (f.size > MAX_PDF_MB * 1024 * 1024) job = Promise.reject(new Error("That PDF is over " + MAX_PDF_MB + " MB. Compress it, or upload it to Google Drive and paste the link instead."));
+      else job = blobToB64(f).then(function (b64) {
+        var old = d.link;
+        var path = "docs/" + slug(data.documents[ci].course.replace(/documents?/i, "") + "-" + d.title) + ".pdf";
+        d.link = path;
+        if (old && old !== path) dropFile(old);
+        uploads[path] = { b64: b64 }; delete deletes[path];
+      });
+    }
+    job.then(function () { lastMsg = null; markDirty(); render(); })
+       .catch(function (err) { setStatus(err.message || String(err), "err"); render(); });
+    e.target.value = "";
+  });
+
+  document.getElementById("save").onclick = save;
+  document.getElementById("discard").onclick = function () {
+    if (!window.confirm("Discard all unsaved changes?")) return;
+    data = parseContent(originalText); uploads = {}; deletes = {}; dirty = false; lastMsg = null; render();
+  };
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+  /* ================= Start ================= */
+  var savedTok = getItem("veteran-admin-token");
+  if (savedTok) {
+    signIn(savedTok, !!(LS && LS.getItem("veteran-admin-token"))).then(render).catch(function (e) {
+      token = ""; clearItem("veteran-admin-token"); renderSignIn(friendly(e, "signin"));
+    });
+  } else {
+    renderSignIn();
+  }
+})();
+</script>
+</body>
+</html>
