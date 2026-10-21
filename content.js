@@ -7,13 +7,13 @@ window.SITE = {
   "teamRole": "Senior Computer Science Student @ Bilkent University",
   "team": [
     {
-      "name": "Yağız Güven",
-      "photo": "assets/team/yagiz-guven.jpg",
+      "name": "Doruk Arca",
+      "photo": "assets/team/doruk-arca.jpg",
       "logbook": ""
     },
     {
-      "name": "Erez Koç",
-      "photo": "assets/team/erez-koc.jpg",
+      "name": "Yağız Güven",
+      "photo": "assets/team/yagiz-guven.jpg",
       "logbook": ""
     },
     {
@@ -22,8 +22,8 @@ window.SITE = {
       "logbook": ""
     },
     {
-      "name": "Doruk Arca",
-      "photo": "assets/team/doruk-arca.jpg",
+      "name": "Erez Koç",
+      "photo": "assets/team/erez-koc.jpg",
       "logbook": ""
     },
     {
@@ -33,18 +33,6 @@ window.SITE = {
     }
   ],
   "gallery": [
-    {
-      "src": "assets/gallery/placeholder-1.jpg",
-      "caption": "Placeholder: replace with a meeting photo"
-    },
-    {
-      "src": "assets/gallery/placeholder-2.jpg",
-      "caption": "Placeholder: replace with a meeting photo"
-    },
-    {
-      "src": "assets/gallery/placeholder-3.jpg",
-      "caption": "Placeholder: replace with a demo photo"
-    },
     {
       "src": "assets/gallery/2026-10-21-whatsapp-image-2026-10-21-at-10-50-35.jpg",
       "caption": "A productive meeting"
