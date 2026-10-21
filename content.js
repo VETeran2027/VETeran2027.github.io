@@ -28,7 +28,7 @@ window.SITE = {
     },
     {
       "name": "Nevzat Eren Tezcan",
-      "photo": "",
+      "photo": "assets/team/nevzat-eren-tezcan.jpg",
       "logbook": "https://docs.google.com/document/d/1hcdpkNScdT1fJEYwkL8IeJG-qEbfIDsydWySa9BAlaA"
     }
   ],
