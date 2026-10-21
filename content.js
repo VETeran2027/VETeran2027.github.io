@@ -8,27 +8,27 @@ window.SITE = {
   "team": [
     {
       "name": "Doruk Arca",
-      "photo": "assets/team/doruk-arca.jpg",
+      "photo": "",
       "logbook": ""
     },
     {
       "name": "Yağız Güven",
-      "photo": "assets/team/yagiz-guven.jpg",
+      "photo": "",
       "logbook": ""
     },
     {
       "name": "Kaan Yusuf Kayhan",
-      "photo": "assets/team/kaan-yusuf-kayhan.jpg",
+      "photo": "",
       "logbook": ""
     },
     {
       "name": "Erez Koç",
-      "photo": "assets/team/erez-koc.jpg",
+      "photo": "",
       "logbook": ""
     },
     {
       "name": "Nevzat Eren Tezcan",
-      "photo": "assets/team/nevzat-eren-tezcan.jpg",
+      "photo": "",
       "logbook": "https://docs.google.com/document/d/1hcdpkNScdT1fJEYwkL8IeJG-qEbfIDsydWySa9BAlaA"
     }
   ],
@@ -39,7 +39,7 @@ window.SITE = {
     }
   ],
   "contact": {
-    "email": "veteran.team@example.com",
+    "email": "veteran_team@googlegroups.com",
     "address": "Department of Computer Engineering, Bilkent University, Çankaya, Ankara 06800, Türkiye",
     "github": "https://github.com/VETeran2027",
     "website": "https://veteran2027.github.io"
